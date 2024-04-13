@@ -24,27 +24,20 @@ h1{
 span{
   color: #5f9fd4;
 }
-.buttons-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
   </style>
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <body>
-  <div class="buttons-row">
   <h1><span>I Love You </span> Azita 💖</h1>
   <canvas id="canvas" width="1400" height="600"></canvas>
-</div>
 </body>
 <!-- partial -->
   <script>
 	  ///////////////////////////////////
     var canvas = document.getElementById("canvas");
 
-canvas.width = window.innerWidth-100;
+canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Initialize the GL context
