@@ -5,6 +5,53 @@
   <title>Azita 💖</title>
   <style>
     @import url("https://fonts.googleapis.com/css?family=Indie+Flower");
+    .title-word {
+  animation: color-animation 4s linear infinite;
+}
+
+.title-word-1 {
+  --color-1: #5f9fd4;
+  --color-2: #B93A79;
+  --color-3: #5f9fd4;
+}
+
+.title-word-2 {
+  --color-1: #B93A79;
+  --color-2: #5f9fd4;
+  --color-3: #B93A79;
+}
+
+.title-word-3 {
+  --color-1: #5f9fd4;
+  --color-2: #B93A79;
+  --color-3: #5f9fd4;
+}
+
+.title-word-4 {
+  --color-1: #B93A79;
+  --color-2: #5f9fd4;
+  --color-3: #B93A79;
+}
+
+@keyframes color-animation {
+  0%    {color: var(--color-1)}
+  32%   {color: var(--color-1)}
+  33%   {color: var(--color-2)}
+  65%   {color: var(--color-2)}
+  66%   {color: var(--color-3)}
+  99%   {color: var(--color-3)}
+  100%  {color: var(--color-1)}
+}
+
+/* Here are just some visual styles. 🖌 */
+.title {
+  font-family: "Indie Flower", cursive;
+  color: #B93A79;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
     body {
   background-color: #000;    
   margin:0;
@@ -13,28 +60,23 @@
   text-align: center;
 
 }
-h1{
-  color: #B93A79;
-  font-family: "Indie Flower", cursive;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-span{
-  color: #5f9fd4;
-}
   </style>
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <body>
-  <h1><span>I Love You </span> Azita 💖</h1>
-  <canvas id="canvas" width="1400" height="600"></canvas>
+  <div class="container">
+    <h1 class="title">
+      <span class="title-word title-word-1">I</span>
+      <span class="title-word title-word-2">Love</span>
+      <span class="title-word title-word-3">You</span>
+      <span class="title-word title-word-4">Azita💖</span>
+    </h1>
+  </div>
+    <canvas id="canvas" width="1200" height="500"></canvas>
 </body>
 <!-- partial -->
   <script>
-	  ///////////////////////////////////
     var canvas = document.getElementById("canvas");
 
 canvas.width = window.innerWidth;
