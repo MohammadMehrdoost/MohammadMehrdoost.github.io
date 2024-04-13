@@ -1,58 +1,122 @@
-<html>
-
-<head>
-  <title>love you</title>
-  <style>
-@import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
-
-@-webkit-keyframes throb{
-  0%{
-    -webkit-transform: scale(1);
+<style>
+	body {
+  background-color: #000;    
+  margin: 0;
+  overflow: hidden;
+  background-repeat: no-repeat;
 	}
-  35%{
-	  -webkit-transform: scale(1.2);
-	}
-	85%{
-	  -webkit-transform: scale(1);
-	}		
+</style>
+<script>
+	var canvas = document.getElementById("canvas");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Initialize the GL context
+var gl = canvas.getContext('webgl');
+if(!gl){
+  console.error("Unable to initialize WebGL.");
 }
 
-html {
-  display: table;
-  width: 100%;
-  height: 100vmin;
-  table-layout: fixed;
+//Time
+var time = 0.0;
+
+//************** Shader sources **************
+
+var vertexSource = `
+attribute vec2 position;
+void main() {
+	gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+var fragmentSource = `
+precision highp float;
+  dist = getSegment(t, pos, 3.4, scale);
+  glow = getGlow(dist, radius, intensity);
+  
+  //White core
+  col += 10.0*vec3(smoothstep(0.003, 0.001, dist));
+  //Blue glow
+  col += glow * vec3(0.1,0.4,1.0);
+        
+	//Tone mapping
+	col = 1.0 - exp(-col);
+
+	//Gamma
+	col = pow(col, vec3(0.4545));
+
+	//Output to screen
+ 	gl_FragColor = vec4(col,1.0);
+}
+`;
+
+//************** Utility functions **************
+
+window.addEventListener('resize', onWindowResize, false);
+
+function onWindowResize(){
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+	gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.uniform1f(widthHandle, window.innerWidth);
+  gl.uniform1f(heightHandle, window.innerHeight);
 }
 
-body {
-  display: table-cell;
-  vertical-align: middle;
-  font-family: 'Shadows Into Light';
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-         function check() {
-  if ( document.forms[0].elements[0].checked == true && document.forms[0].elements[1].checked == true && document.forms[0].elements[2].checked == true ) {
-    if ( ! $('.wrapper').hasClass('throb')) {
-        // Do things on Nav Close
-        $('.wrapper').addClass('throb');
-    } 
-  } else {
-    if ($('.wrapper').hasClass('throb')) {
-        // Do things on Nav Close
-        $('.wrapper').removeClass('throb');
-    }
+
+//Compile shader and combine with source
+function compileShader(shaderSource, shaderType){
+  var shader = gl.createShader(shaderType);
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
+  if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+  	throw "Shader compile failed with: " + gl.getShaderInfoLog(shader);
   }
-         }
-    </script>
-<form>
-<div class="wrapper">
-  <input type="checkbox" id="ck1" onClick="check()"/>
-  <label for="ck1">I</label>
-  <input type="checkbox" id="ck2" onClick="check()"/>
-  <label for="ck2">love</label>
-  <input type="checkbox" id="ck3" onClick="check()"/>
-  <label for="ck3">you</label>
-  <span>(Click on words)</span>
-</div>
-</form>
+  return shader;
+}
+
+//From https://codepen.io/jlfwong/pen/GqmroZ
+//Utility to complain loudly if we fail to find the attribute/uniform
+function getAttribLocation(program, name) {
+  var positionHandle = getAttribLocation(program, 'position');
+
+gl.enableVertexAttribArray(positionHandle);
+gl.vertexAttribPointer(positionHandle,
+  2, 				// position is a vec2 (2 values per component)
+  gl.FLOAT, // each component is a float
+  false, 		// don't normalize values
+  2 * 4, 		// two 4 byte float components per vertex (32 bit float is 4 bytes)
+  0 				// how many bytes inside the buffer to start from
+  );
+
+//Set uniform handle
+var timeHandle = getUniformLocation(program, 'time');
+var widthHandle = getUniformLocation(program, 'width');
+var heightHandle = getUniformLocation(program, 'height');
+
+gl.uniform1f(widthHandle, window.innerWidth);
+gl.uniform1f(heightHandle, window.innerHeight);
+
+var lastFrame = Date.now();
+var thisFrame;
+
+function draw(){
+	
+  //Update time
+	thisFrame = Date.now();
+  time += (thisFrame - lastFrame)/1000;	
+	lastFrame = thisFrame;
+
+	//Send uniforms to program
+  gl.uniform1f(timeHandle, time);
+  //Draw a triangle strip connecting vertices 0-4
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+<body>
+  <canvas id="canvas" width="1400" height="600"></canvas>
+</body>
