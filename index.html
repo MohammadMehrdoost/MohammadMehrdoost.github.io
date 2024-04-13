@@ -10,24 +10,6 @@
   overflow: hidden;
   background-repeat: no-repeat;
 }
-	  @import url("https://fonts.googleapis.com/css?family=Indie+Flower");
-* {
-  font-family: "Indie Flower", cursive;
-  background-color: #ff4444;
-  color: #fff;
-  text-align: center;
-  font-size: 1.5em;
-}
-p {
-  position: fixed;
-  padding-top: 10%;
-  left: 2;
-  font-size: 15px;
-  color: black;
-  font-family: arial;
-  opacity: 0.4;
-}
-	
   </style>
 </head>
 <body>
@@ -38,38 +20,6 @@ p {
 </body>
 <!-- partial -->
   <script>
-	  alert("hover the text with mouse \n -------=------------");
-var s = document.getElementById("output").innerHTML;
-var o = document.getElementById("output");
-s = s.split("");
-o.innerHTML = "";
-for (i = 0; i < s.length; i++) {
-  o.innerHTML += '<span id="' + i + '" class="m">' + s[i] + "</span>";
-}
-$(".m").hover(function() {
-  var styleProps = $(this).css("zoom");
-  if (styleProps > 1.01) {
-    // alert("mored ukve");
-  } else {
-    $(this).animate({ zoom: 1.2 }, 200);
-    $(this)
-      .next()
-      .animate({ zoom: 2 }, 200);
-    $(this)
-      .nextUntil()
-      .animate({ zoom: 2 }, 200);
-  }
-});
-$(".m").mouseout(function() {
-  $(this).animate({ zoom: 1 }, 200);
-  $(this)
-    .next()
-    .animate({ zoom: 1 }, 400);
-  $(this)
-    .nextUntil()
-    .animate({ zoom: 1 }, 400);
-});
-
 	  ///////////////////////////////////
     var canvas = document.getElementById("canvas");
 
